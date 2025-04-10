@@ -3,7 +3,7 @@ from pathlib import Path
 
 # Chemins des fichiers
 input_path = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Protein_Interactions\STRING_Interactions.txt")
-output_path = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\STRING_filtered_interactions.txt")
+output_path = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\STRING_levure.temp")
 
 # 1. Chargement et filtrage initial
 df = pd.read_csv(input_path, sep=" ")
@@ -42,6 +42,7 @@ unique_proteins = pd.unique(
 num_interactions = len(unique_interactions_df)
 
 # Affichage des résultats
+print("\n STRING ----- levure")
 print("Traitement terminé avec succès.")
 print(f"Nombre de protéines uniques : {len(unique_proteins)}")
 print(f"Nombre d'interactions uniques : {num_interactions}")

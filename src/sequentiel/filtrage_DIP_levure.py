@@ -4,7 +4,7 @@ from pathlib import Path
 def process_dip_interactions():
     # Configuration des chemins
     input_file = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Protein_Interactions\DIP_Interactions.mif25")
-    output_file = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\DIP_filtered_interactions.txt")
+    output_file = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\DIP_levure.txt")
     
     NS = {'mif': 'http://psi.hupo.org/mi/mif'}
     tree = ET.parse(input_file)
