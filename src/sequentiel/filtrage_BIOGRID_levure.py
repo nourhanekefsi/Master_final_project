@@ -94,7 +94,7 @@ def process_biogrid_high_confidence():
     non_redundant = clean_df.sort_values('Total_Score', ascending=False).drop_duplicates(subset=['SortedPair'])
     
     # 6. Dynamic threshold to get ~50,000 interactions
-    target_count = 50000
+    target_count = 300000
     if len(non_redundant) > target_count:
         # Find score threshold that gives us ~50,000 interactions
         thresholds = sorted(non_redundant['Total_Score'].unique(), reverse=True)

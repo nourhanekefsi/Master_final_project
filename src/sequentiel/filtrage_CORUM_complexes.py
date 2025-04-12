@@ -118,7 +118,7 @@ if __name__ == '__main__':
     
     # Traitement BIOGRID
     process_ppi_network(
-        ppi_file=DATA_DIR / "interactions" / "BIOGRID_humain.txt",
+        ppi_file=DATA_DIR / "weighted_networks" / "weighted_BIOGRID_humain.txt",
         complexes_file=CORUM_FILE,
         output_file=DATA_DIR / "complexes" / "BIOGRID_complexes_humain.txt",
         network_name="BIOGRID"
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     
     # Traitement STRING
     process_ppi_network(
-        ppi_file=DATA_DIR / "interactions" / "STRING_humain.txt",
+        ppi_file=DATA_DIR / "weighted_networks" / "weighted_STRING_humain.txt",
         complexes_file=CORUM_FILE,
         output_file=DATA_DIR / "complexes" / "STRING_complexes_humain.txt",
         network_name="STRING"

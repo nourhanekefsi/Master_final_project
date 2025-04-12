@@ -9,7 +9,7 @@ output_path = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\i
 df = pd.read_csv(input_path, sep=" ")
 
 # Créer un masque de filtrage
-mask = (df["combined_score"] >= 900) & (
+mask = (df["combined_score"] >= 700) & (
     df[["experimental", "coexpression", "database", "textmining"]].max(axis=1) > 90
 )
 

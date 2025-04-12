@@ -43,18 +43,18 @@ def process_biogrid_max_coverage():
     
     # 4. Système de scoring des interactions (conservé pour information)
     method_scores = {
-        'x-ray crystallography': 5,
-        'electron microscopy': 4,
-        'affinity chromatography': 4,
-        'coimmunoprecipitation': 3,
-        'two hybrid': 3,
-        'pull down': 3,
-        'mass spectrometry': 2
+        'x-ray crystallography': 4,
+        'electron microscopy': 3,
+        'affinity chromatography': 3,
+        'coimmunoprecipitation': 2,
+        'two hybrid': 2,
+        'pull down': 2,
+        'mass spectrometry': 1
     }
     
     type_scores = {
         'direct interaction': 3,
-        'physical association': 2,
+        'physical association': 1,
         'complex': 2
     }
     
