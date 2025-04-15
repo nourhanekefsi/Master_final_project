@@ -75,7 +75,7 @@ from collections import defaultdict, deque
 from pathlib import Path
 
 def load_complexes(file_path):
-    """Charge les complexes depuis le fichier et retourne une liste de tuples (id_complexe, set de protéines)"""
+    """Charge les complexes depuis le fichier"""
     complexes = []
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
@@ -83,11 +83,12 @@ def load_complexes(file_path):
             if len(parts) >= 2:
                 complex_id = parts[0]
                 proteins = set(p.strip() for p in parts[1].split() if p.strip())
-                complexes.append((complex_id, proteins))
+                if len(proteins) >= 3:  # Ne garder que les complexes avec ≥3 protéines
+                    complexes.append((complex_id, proteins))
     return complexes
 
 def load_ppi_network(file_path):
-    """Charge le réseau PPI et retourne un set de protéines et le graphe PPI"""
+    """Charge le réseau PPI"""
     proteins = set()
     graph = defaultdict(set)
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -106,16 +107,13 @@ def load_ppi_network(file_path):
     return proteins, graph
 
 def is_single_connected_component(proteins, ppi_graph):
-    """Vérifie si les protéines forment un seul composant connecté dans le réseau PPI"""
-    if not proteins:
-        return False
+    """Vérifie la connectivité du complexe"""
+    if len(proteins) < 2:
+        return True
     
     visited = set()
-    queue = deque()
-    
-    start_protein = next(iter(proteins))
-    queue.append(start_protein)
-    visited.add(start_protein)
+    queue = deque([next(iter(proteins))])
+    visited.add(queue[0])
     
     while queue:
         current = queue.popleft()
@@ -126,10 +124,10 @@ def is_single_connected_component(proteins, ppi_graph):
     
     return visited == proteins
 
-def filter_complexes(complexes, ppi_proteins, ppi_graph, output_file):
-    """Filtre les complexes et sauvegarde ceux valides"""
+def filter_and_save_complexes(complexes, ppi_proteins, ppi_graph, output_file):
+    """Filtre et sauvegarde les complexes valides"""
     stats = {
-        'total': 0,
+        'total': len(complexes),
         'kept': 0,
         'missing_proteins': 0,
         'disconnected': 0
@@ -137,14 +135,12 @@ def filter_complexes(complexes, ppi_proteins, ppi_graph, output_file):
     
     with open(output_file, 'w', encoding='utf-8') as f_out:
         for complex_id, proteins in complexes:
-            stats['total'] += 1
-            
-            # Vérifier que toutes les protéines sont dans le PPI
+            # Vérifier présence dans PPI
             if not all(p in ppi_proteins for p in proteins):
                 stats['missing_proteins'] += 1
                 continue
             
-            # Vérifier la connectivité
+            # Vérifier connectivité
             if not is_single_connected_component(proteins, ppi_graph):
                 stats['disconnected'] += 1
                 continue
@@ -172,9 +168,9 @@ def main():
         base_dir / "complexes" / "complexes_BIOGRID_levure.txt"
     ]
 
-    # Charger les complexes
+    # Charger les complexes (déjà filtrés pour taille ≥3)
     complexes = load_complexes(complexes_file)
-    print(f"Nombre total de complexes chargés: {len(complexes)}")
+    print(f"Complexes chargés (taille ≥3): {len(complexes)}")
 
     # Traiter chaque réseau PPI
     for ppi_file, out_file in zip(reseau_files, output_files):
@@ -183,13 +179,13 @@ def main():
         try:
             # Charger le réseau PPI
             ppi_proteins, ppi_graph = load_ppi_network(ppi_file)
-            print(f"- Protéines uniques dans PPI: {len(ppi_proteins):,}")
-            print(f"- Interactions dans PPI: {sum(len(v) for v in ppi_graph.values())//2:,}")
+            print(f"- Protéines uniques: {len(ppi_proteins):,}")
+            print(f"- Interactions: {sum(len(v) for v in ppi_graph.values())//2:,}")
 
-            # Filtrer les complexes
-            stats = filter_complexes(complexes, ppi_proteins, ppi_graph, out_file)
+            # Filtrer et sauvegarder
+            stats = filter_and_save_complexes(complexes, ppi_proteins, ppi_graph, out_file)
             
-            # Afficher les statistiques
+            # Statistiques
             print(f"- Complexes analysés: {stats['total']:,}")
             print(f"- Complexes conservés: {stats['kept']:,} ({stats['kept']/stats['total']*100:.1f}%)")
             print(f"  - Rejetés (protéines manquantes): {stats['missing_proteins']:,}")
@@ -197,9 +193,9 @@ def main():
             print(f"- Fichier généré: {out_file}")
 
         except Exception as e:
-            print(f"Erreur avec {ppi_file}: {str(e)}")
+            print(f"Erreur: {str(e)}")
 
-    print("\nTerminé avec succès !")
+    print("\nTerminé!")
 
 if __name__ == "__main__":
     main()

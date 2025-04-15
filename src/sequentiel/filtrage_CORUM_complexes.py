@@ -66,13 +66,12 @@ def load_ppi_network(ppi_file):
 
 def is_single_connected_component(proteins, ppi_graph):
     """Vérifie si les protéines forment un seul composant connecté dans le réseau PPI"""
-    if not proteins:
-        return False
+    if len(proteins) < 2:  # Un complexe d'une seule protéine est toujours connecté
+        return True
     
     visited = set()
     queue = deque()
     
-    # Prendre une protéine quelconque comme point de départ
     start_protein = next(iter(proteins))
     queue.append(start_protein)
     visited.add(start_protein)
@@ -87,8 +86,14 @@ def is_single_connected_component(proteins, ppi_graph):
     return visited == proteins
 
 def filter_complexes(complexes_file, ppi_proteins, ppi_graph, output_file):
-    """Filtre les complexes conservant seulement ceux avec toutes les protéines dans le PPI et formant un seul composant connecté"""
-    stats = {'total': 0, 'kept': 0, 'missing_proteins': 0, 'disconnected': 0}
+    """Filtre les complexes selon les critères spécifiés"""
+    stats = {
+        'total': 0,
+        'kept': 0,
+        'small': 0,
+        'missing_proteins': 0,
+        'disconnected': 0
+    }
     
     try:
         with open(complexes_file, 'r', encoding='utf-8') as f_in, \
@@ -103,15 +108,21 @@ def filter_complexes(complexes_file, ppi_proteins, ppi_graph, output_file):
                 
                 stats['total'] += 1
                 complex_id, proteins_str = row[0].strip(), row[1].strip()
-                proteins = set(p.strip() for p in proteins_str.split(';') if p.strip())
+                proteins = [p.strip() for p in proteins_str.split(';') if p.strip()]
+                proteins_set = set(proteins)
+                
+                # Vérifier la taille du complexe
+                if len(proteins_set) < 3:
+                    stats['small'] += 1
+                    continue
                 
                 # Vérifier que toutes les protéines sont dans le PPI
-                if not all(p in ppi_proteins for p in proteins):
+                if not all(p in ppi_proteins for p in proteins_set):
                     stats['missing_proteins'] += 1
                     continue
                 
-                # Vérifier que les protéines forment un seul composant connecté
-                if not is_single_connected_component(proteins, ppi_graph):
+                # Vérifier la connectivité
+                if not is_single_connected_component(proteins_set, ppi_graph):
                     stats['disconnected'] += 1
                     continue
                 
@@ -122,7 +133,7 @@ def filter_complexes(complexes_file, ppi_proteins, ppi_graph, output_file):
         return stats
     except Exception as e:
         print(f"Erreur traitement {complexes_file}: {str(e)}")
-        return {'total': 0, 'kept': 0, 'missing_proteins': 0, 'disconnected': 0}
+        return {'total': 0, 'kept': 0, 'small': 0, 'missing_proteins': 0, 'disconnected': 0}
 
 def process_ppi_network(ppi_file, complexes_file, output_file, network_name):
     """Processus complet pour un réseau PPI"""
@@ -147,6 +158,7 @@ def process_ppi_network(ppi_file, complexes_file, output_file, network_name):
     # Afficher les statistiques
     print(f"- Complexes analysés: {stats['total']:,}")
     print(f"- Complexes conservés: {stats['kept']:,} ({stats['kept']/stats['total']*100:.1f}%)")
+    print(f"  - Rejetés (taille < 3): {stats['small']:,}")
     print(f"  - Rejetés (protéines manquantes): {stats['missing_proteins']:,}")
     print(f"  - Rejetés (non connectés): {stats['disconnected']:,}")
     print(f"- Fichier généré: {output_file}")
