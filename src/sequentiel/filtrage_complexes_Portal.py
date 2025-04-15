@@ -71,162 +71,135 @@ print(f"Nombre total de complexes trouvés: {len(complexes)}")
 ################################################################################################################################
 
 
-from collections import defaultdict
+from collections import defaultdict, deque
+from pathlib import Path
 
-# Chemins des fichiers
-complexes_file = r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_levure.txt"
-
-reseau_files = [
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\STRING_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\DIP_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\BIOGRID_levure.txt"
-]
-output_files = [
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_STRING_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_DIP_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_BIOGRID_levure.txt"
-]
-
-# 1. Charger les complexes depuis complexes_levure.txt
 def load_complexes(file_path):
+    """Charge les complexes depuis le fichier et retourne une liste de tuples (id_complexe, set de protéines)"""
     complexes = []
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
             parts = line.strip().split('\t')
             if len(parts) >= 2:
-                proteins = set(parts[1].split())
-                complexes.append(proteins)
+                complex_id = parts[0]
+                proteins = set(p.strip() for p in parts[1].split() if p.strip())
+                complexes.append((complex_id, proteins))
     return complexes
 
-complexes = load_complexes(complexes_file)
-print(f"Nombre total de complexes chargés: {len(complexes)}")
-
-# 2. Charger un réseau PPI depuis un fichier (gère les TSV/CSV et ignore les en-têtes)
 def load_ppi_network(file_path):
-    network = defaultdict(set)
-    with open(file_path, 'r') as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#") or line.startswith("protein1"):  # Ignorer lignes vides/en-têtes
-                continue
-            parts = line.split('\t') if file_path.endswith('.tsv') else line.split()
-            if len(parts) >= 2:
-                prot1, prot2 = parts[0], parts[1]  # Prendre les 2 premières colonnes
-                network[prot1].add(prot2)
-                network[prot2].add(prot1)
-    return network
-
-# 3. Vérifier si un complexe est entièrement couvert par le réseau
-def is_complex_covered(complexe, network):
-    proteins = list(complexe)
-    for i in range(len(proteins)):
-        for j in range(i + 1, len(proteins)):
-            prot1, prot2 = proteins[i], proteins[j]
-            if prot2 not in network.get(prot1, set()):
-                return False
-    return True
-
-# 4. Traiter chaque réseau PPI et sauvegarder les résultats
-for reseau_file, output_file in zip(reseau_files, output_files):
-    print(f"\nTraitement de {reseau_file}...")
-    try:
-        network = load_ppi_network(reseau_file)
-        
-        # Trouver les complexes couverts
-        covered_complexes = []
-        for complexe in complexes:
-            if is_complex_covered(complexe, network):
-                covered_complexes.append(complexe)
-        
-        # Sauvegarder dans le fichier de sortie
-        with open(output_file, 'w', encoding='utf-8') as f_out:
-            for idx, complexe in enumerate(covered_complexes, 1):
-                f_out.write(f"{idx}\t{' '.join(complexe)}\n")
-        
-        print(f"→ {len(covered_complexes)} complexes trouvés dans ce réseau.")
-        print(f"Fichier généré: {output_file}")
-    except Exception as e:
-        print(f"Erreur avec {reseau_file}: {str(e)}")
-
-print("\nTerminé avec succès !")
-
-#############################################################################################################################
-
-from collections import defaultdict
-
-# Chemins des fichiers
-complexes_file = r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_levure.txt"
-
-reseau_files = [
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_DIP_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_levure.txt"
-]
-output_files = [
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_STRING_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_DIP_levure.txt",
-    r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\complexes_BIOGRID_levure.txt"
-]
-
-# 1. Charger les complexes depuis complexes_levure.txt
-def load_complexes(file_path):
-    complexes = []
+    """Charge le réseau PPI et retourne un set de protéines et le graphe PPI"""
+    proteins = set()
+    graph = defaultdict(set)
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
-            parts = line.strip().split('\t')
-            if len(parts) >= 2:
-                proteins = set(parts[1].split())
-                complexes.append(proteins)
-    return complexes
-
-complexes = load_complexes(complexes_file)
-print(f"Nombre total de complexes chargés: {len(complexes)}")
-
-# 2. Charger un réseau PPI depuis un fichier (gère les TSV/CSV et ignore les en-têtes)
-def load_ppi_network(file_path):
-    network = defaultdict(set)
-    with open(file_path, 'r') as f:
-        for line in f:
             line = line.strip()
-            if not line or line.startswith("#") or line.startswith("protein1"):  # Ignorer lignes vides/en-têtes
+            if not line or line.startswith("#") or line.startswith("protein1"):
                 continue
-            parts = line.split('\t') if file_path.endswith('.tsv') else line.split()
+            parts = line.split('\t') if '\t' in line else line.split()
             if len(parts) >= 2:
-                prot1, prot2 = parts[0], parts[1]  # Prendre les 2 premières colonnes
-                network[prot1].add(prot2)
-                network[prot2].add(prot1)
-    return network
+                p1, p2 = parts[0].strip(), parts[1].strip()
+                if p1 and p2:
+                    proteins.add(p1)
+                    proteins.add(p2)
+                    graph[p1].add(p2)
+                    graph[p2].add(p1)
+    return proteins, graph
 
-# 3. Vérifier si un complexe est entièrement couvert par le réseau
-def is_complex_covered(complexe, network):
-    proteins = list(complexe)
-    for i in range(len(proteins)):
-        for j in range(i + 1, len(proteins)):
-            prot1, prot2 = proteins[i], proteins[j]
-            if prot2 not in network.get(prot1, set()):
-                return False
-    return True
+def is_single_connected_component(proteins, ppi_graph):
+    """Vérifie si les protéines forment un seul composant connecté dans le réseau PPI"""
+    if not proteins:
+        return False
+    
+    visited = set()
+    queue = deque()
+    
+    start_protein = next(iter(proteins))
+    queue.append(start_protein)
+    visited.add(start_protein)
+    
+    while queue:
+        current = queue.popleft()
+        for neighbor in ppi_graph[current]:
+            if neighbor in proteins and neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    
+    return visited == proteins
 
-# 4. Traiter chaque réseau PPI et sauvegarder les résultats
-for reseau_file, output_file in zip(reseau_files, output_files):
-    print(f"\nTraitement de {reseau_file}...")
-    try:
-        network = load_ppi_network(reseau_file)
-        
-        # Trouver les complexes couverts
-        covered_complexes = []
-        for complexe in complexes:
-            if is_complex_covered(complexe, network):
-                covered_complexes.append(complexe)
-        
-        # Sauvegarder dans le fichier de sortie
-        with open(output_file, 'w', encoding='utf-8') as f_out:
-            for idx, complexe in enumerate(covered_complexes, 1):
-                f_out.write(f"{idx}\t{' '.join(complexe)}\n")
-        
-        print(f"→ {len(covered_complexes)} complexes trouvés dans ce réseau.")
-        print(f"Fichier généré: {output_file}")
-    except Exception as e:
-        print(f"Erreur avec {reseau_file}: {str(e)}")
+def filter_complexes(complexes, ppi_proteins, ppi_graph, output_file):
+    """Filtre les complexes et sauvegarde ceux valides"""
+    stats = {
+        'total': 0,
+        'kept': 0,
+        'missing_proteins': 0,
+        'disconnected': 0
+    }
+    
+    with open(output_file, 'w', encoding='utf-8') as f_out:
+        for complex_id, proteins in complexes:
+            stats['total'] += 1
+            
+            # Vérifier que toutes les protéines sont dans le PPI
+            if not all(p in ppi_proteins for p in proteins):
+                stats['missing_proteins'] += 1
+                continue
+            
+            # Vérifier la connectivité
+            if not is_single_connected_component(proteins, ppi_graph):
+                stats['disconnected'] += 1
+                continue
+            
+            # Écrire le complexe valide
+            f_out.write(f"{complex_id}\t{' '.join(proteins)}\n")
+            stats['kept'] += 1
+    
+    return stats
 
-print("\nTerminé avec succès !")
+def main():
+    # Configuration des chemins
+    base_dir = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data")
+    
+    # Fichiers d'entrée/sortie
+    complexes_file = base_dir / "complexes" / "complexes_levure.txt"
+    reseau_files = [
+        base_dir / "weighted_networks" / "weighted_STRING_levure.txt",
+        base_dir / "weighted_networks" / "weighted_DIP_levure.txt",
+        base_dir / "weighted_networks" / "weighted_BIOGRID_levure.txt"
+    ]
+    output_files = [
+        base_dir / "complexes" / "complexes_STRING_levure.txt",
+        base_dir / "complexes" / "complexes_DIP_levure.txt",
+        base_dir / "complexes" / "complexes_BIOGRID_levure.txt"
+    ]
+
+    # Charger les complexes
+    complexes = load_complexes(complexes_file)
+    print(f"Nombre total de complexes chargés: {len(complexes)}")
+
+    # Traiter chaque réseau PPI
+    for ppi_file, out_file in zip(reseau_files, output_files):
+        print(f"\nTraitement de {ppi_file.name}...")
+        
+        try:
+            # Charger le réseau PPI
+            ppi_proteins, ppi_graph = load_ppi_network(ppi_file)
+            print(f"- Protéines uniques dans PPI: {len(ppi_proteins):,}")
+            print(f"- Interactions dans PPI: {sum(len(v) for v in ppi_graph.values())//2:,}")
+
+            # Filtrer les complexes
+            stats = filter_complexes(complexes, ppi_proteins, ppi_graph, out_file)
+            
+            # Afficher les statistiques
+            print(f"- Complexes analysés: {stats['total']:,}")
+            print(f"- Complexes conservés: {stats['kept']:,} ({stats['kept']/stats['total']*100:.1f}%)")
+            print(f"  - Rejetés (protéines manquantes): {stats['missing_proteins']:,}")
+            print(f"  - Rejetés (non connectés): {stats['disconnected']:,}")
+            print(f"- Fichier généré: {out_file}")
+
+        except Exception as e:
+            print(f"Erreur avec {ppi_file}: {str(e)}")
+
+    print("\nTerminé avec succès !")
+
+if __name__ == "__main__":
+    main()
