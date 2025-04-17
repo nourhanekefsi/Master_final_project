@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=63", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HPC_Tabu"
+version = "0.1.0"
+authors = [
+    {name = "KEFSI Nourhane", email = "nourhanekefsi@gmail.com"},
+]
+description = "Framework for Genetic Algorithms with parallel support"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"  # Format SPDX simple
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy>=1.21.0",
+    "matplotlib>=3.5.0",
+]
+
+[project.optional-dependencies]
+parallel = [
+    "mpi4py>=3.1.1",
+    "dask>=2023.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/nourhanekefsi/Master_final_project/tree/main/src/Frameworks/HPC_Tabu"

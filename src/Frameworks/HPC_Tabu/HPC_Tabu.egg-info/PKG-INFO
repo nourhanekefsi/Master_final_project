@@ -1,0 +1,56 @@
+Metadata-Version: 2.4
+Name: HPC_Tabu
+Version: 0.1.0
+Summary: Framework for Genetic Algorithms with parallel support
+Author-email: KEFSI Nourhane <nourhanekefsi@gmail.com>
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/nourhanekefsi/Master_final_project/tree/main/src/Frameworks/HPC_Tabu
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: numpy>=1.21.0
+Requires-Dist: matplotlib>=3.5.0
+Provides-Extra: parallel
+Requires-Dist: mpi4py>=3.1.1; extra == "parallel"
+Requires-Dist: dask>=2023.0.0; extra == "parallel"
+Dynamic: license-file
+
+
+fastTabou/
+│
+├── fastTabou/
+│   ├── __init__.py
+│   ├── sequential/
+│   │   ├── __init__.py
+│   │   ├── tabou_search.py
+│   │   └── utils.py
+│   ├── parallel/
+│   │   ├── __init__.py
+│   │   ├── parallel_tabou.py
+│   │   └── utils.py
+│   └── common/
+│       ├── __init__.py
+│       ├── solution.py
+│       └── neighborhood.py
+│
+├── examples/
+│   ├── sequential_example.py
+│   └── parallel_example.py
+│
+├── tests/
+│   ├── test_sequential.py
+│   └── test_parallel.py
+│
+├── setup.py
+├── README.md
+└── requirements.txt
+
+# fastTabou
+Framework for Tabu Search algorithms with sequential and parallel implementations.
+
+## Installation
+
+```bash
+pip install fastTabou

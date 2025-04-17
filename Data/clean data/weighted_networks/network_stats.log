@@ -1,0 +1,360 @@
+2025-04-12 18:44:46,196 - INFO - 
+========================================
+Traitement de BIOGRID_ (humain)
+========================================
+2025-04-12 18:44:47,043 - INFO - FS: 80778 interactions
+2025-04-12 18:44:47,106 - INFO - SL: 86981 interactions
+2025-04-12 18:44:47,129 - INFO - CO: 72599 interactions
+2025-04-12 18:44:47,179 - INFO - HCN: 88647 interactions
+2025-04-12 18:44:47,241 - INFO - Interactions communes: 66373
+2025-04-12 18:44:47,791 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_humain.txt
+2025-04-12 18:44:47,808 - INFO - 
+Résultats pour BIOGRID__humain:
+2025-04-12 18:44:47,809 - INFO - - Protéines uniques: 9171
+2025-04-12 18:44:47,809 - INFO - - Interactions: 66373
+2025-04-12 18:44:47,811 - INFO - - Poids moyen: 0.2936
+2025-04-12 18:44:47,830 - INFO - 
+========================================
+Traitement de STRING_ (humain)
+========================================
+2025-04-12 18:44:50,343 - INFO - FS: 305683 interactions
+2025-04-12 18:44:50,628 - INFO - SL: 348452 interactions
+2025-04-12 18:44:50,810 - INFO - CO: 277922 interactions
+2025-04-12 18:44:50,989 - INFO - HCN: 349046 interactions
+2025-04-12 18:44:51,273 - INFO - Interactions communes: 246923
+2025-04-12 18:44:53,737 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_humain.txt
+2025-04-12 18:44:53,820 - INFO - 
+Résultats pour STRING__humain:
+2025-04-12 18:44:53,824 - INFO - - Protéines uniques: 14217
+2025-04-12 18:44:53,825 - INFO - - Interactions: 246923
+2025-04-12 18:44:53,827 - INFO - - Poids moyen: 0.2928
+2025-04-12 18:44:53,897 - INFO - 
+========================================
+Traitement de BIOGRID_ (levure)
+========================================
+2025-04-12 18:44:55,455 - INFO - FS: 215304 interactions
+2025-04-12 18:44:55,594 - INFO - SL: 291326 interactions
+2025-04-12 18:44:55,722 - INFO - CO: 286549 interactions
+2025-04-12 18:44:55,868 - INFO - HCN: 300000 interactions
+2025-04-12 18:44:56,038 - INFO - Interactions communes: 200897
+2025-04-12 18:44:57,471 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_levure.txt
+2025-04-12 18:44:57,609 - INFO - 
+Résultats pour BIOGRID__levure:
+2025-04-12 18:44:57,624 - INFO - - Protéines uniques: 5241
+2025-04-12 18:44:57,627 - INFO - - Interactions: 200897
+2025-04-12 18:44:57,627 - INFO - - Poids moyen: 0.2528
+2025-04-12 18:44:57,750 - INFO - 
+========================================
+Traitement de DIP_ (levure)
+========================================
+2025-04-12 18:44:57,998 - INFO - FS: 16393 interactions
+2025-04-12 18:44:58,014 - INFO - SL: 21582 interactions
+2025-04-12 18:44:58,034 - INFO - CO: 20652 interactions
+2025-04-12 18:44:58,050 - INFO - HCN: 22614 interactions
+2025-04-12 18:44:58,056 - INFO - Interactions communes: 15376
+2025-04-12 18:44:58,152 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_DIP_levure.txt
+2025-04-12 18:44:58,152 - INFO - 
+Résultats pour DIP__levure:
+2025-04-12 18:44:58,152 - INFO - - Protéines uniques: 3973
+2025-04-12 18:44:58,167 - INFO - - Interactions: 15376
+2025-04-12 18:44:58,167 - INFO - - Poids moyen: 0.3245
+2025-04-12 18:44:58,167 - INFO - 
+========================================
+Traitement de STRING_ (levure)
+========================================
+2025-04-12 18:44:59,244 - INFO - FS: 86142 interactions
+2025-04-12 18:44:59,315 - INFO - SL: 91378 interactions
+2025-04-12 18:44:59,387 - INFO - CO: 90224 interactions
+2025-04-12 18:44:59,412 - INFO - HCN: 48998 interactions
+2025-04-12 18:44:59,463 - INFO - Interactions communes: 41213
+2025-04-12 18:44:59,926 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_levure.txt
+2025-04-12 18:44:59,947 - INFO - 
+Résultats pour STRING__levure:
+2025-04-12 18:44:59,947 - INFO - - Protéines uniques: 4150
+2025-04-12 18:44:59,947 - INFO - - Interactions: 41213
+2025-04-12 18:44:59,947 - INFO - - Poids moyen: 0.3647
+2025-04-12 18:44:59,967 - INFO - 
+
+Récapitulatif final:
+2025-04-12 18:44:59,984 - INFO - 
+        network  unique_proteins  interactions  mean_weight
+BIOGRID__humain             9171         66373     0.293575
+ STRING__humain            14217        246923     0.292783
+BIOGRID__levure             5241        200897     0.252786
+    DIP__levure             3973         15376     0.324516
+ STRING__levure             4150         41213     0.364710
+2025-04-12 18:44:59,995 - INFO - 
+Statistiques sauvegardées dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\network_statistics.txt
+2025-04-17 16:47:34,590 - INFO - 
+========================================
+Traitement de BIOGRID_ (humain)
+========================================
+2025-04-17 16:47:37,640 - INFO - FS: 80778 interactions
+2025-04-17 16:47:37,750 - INFO - SL: 86981 interactions
+2025-04-17 16:47:37,905 - INFO - CO: 72599 interactions
+2025-04-17 16:47:38,073 - INFO - HCN: 88647 interactions
+2025-04-17 16:47:38,422 - INFO - Interactions communes: 66373
+2025-04-17 16:47:41,383 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_humain.txt
+2025-04-17 16:47:41,464 - INFO - 
+Résultats pour BIOGRID__humain:
+2025-04-17 16:47:41,464 - INFO - - Protéines uniques: 9171
+2025-04-17 16:47:41,482 - INFO - - Interactions: 66373
+2025-04-17 16:47:41,484 - INFO - - Poids moyen: 0.2936
+2025-04-17 16:47:41,486 - INFO - - Densité du réseau: 0.001578
+2025-04-17 16:47:41,534 - INFO - 
+========================================
+Traitement de STRING_ (humain)
+========================================
+2025-04-17 16:47:47,648 - INFO - FS: 205424 interactions
+2025-04-17 16:47:48,575 - INFO - SL: 348452 interactions
+2025-04-17 16:47:48,953 - INFO - CO: 277922 interactions
+2025-04-17 16:47:49,560 - INFO - HCN: 349046 interactions
+2025-04-17 16:47:50,006 - INFO - Interactions communes: 166001
+2025-04-17 16:47:55,318 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_humain.txt
+2025-04-17 16:47:55,601 - INFO - 
+Résultats pour STRING__humain:
+2025-04-17 16:47:55,601 - INFO - - Protéines uniques: 13016
+2025-04-17 16:47:55,601 - INFO - - Interactions: 166001
+2025-04-17 16:47:55,601 - INFO - - Poids moyen: 0.3004
+2025-04-17 16:47:55,601 - INFO - - Densité du réseau: 0.001960
+2025-04-17 16:47:55,701 - INFO - 
+========================================
+Traitement de BIOGRID_ (levure)
+========================================
+2025-04-17 16:48:00,315 - INFO - FS: 215304 interactions
+2025-04-17 16:48:00,946 - INFO - SL: 291326 interactions
+2025-04-17 16:48:01,262 - INFO - CO: 286549 interactions
+2025-04-17 16:48:01,546 - INFO - HCN: 300000 interactions
+2025-04-17 16:48:01,904 - INFO - Interactions communes: 200897
+2025-04-17 16:48:07,715 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_levure.txt
+2025-04-17 16:48:08,025 - INFO - 
+Résultats pour BIOGRID__levure:
+2025-04-17 16:48:08,028 - INFO - - Protéines uniques: 5241
+2025-04-17 16:48:08,030 - INFO - - Interactions: 200897
+2025-04-17 16:48:08,031 - INFO - - Poids moyen: 0.2528
+2025-04-17 16:48:08,033 - INFO - - Densité du réseau: 0.014630
+2025-04-17 16:48:08,221 - INFO - 
+========================================
+Traitement de DIP_ (levure)
+========================================
+2025-04-17 16:48:08,938 - INFO - FS: 16393 interactions
+2025-04-17 16:48:08,998 - INFO - SL: 21582 interactions
+2025-04-17 16:48:09,022 - INFO - CO: 20652 interactions
+2025-04-17 16:48:09,063 - INFO - HCN: 22614 interactions
+2025-04-17 16:48:09,129 - INFO - Interactions communes: 15376
+2025-04-17 16:48:09,486 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_DIP_levure.txt
+2025-04-17 16:48:09,509 - INFO - 
+Résultats pour DIP__levure:
+2025-04-17 16:48:09,514 - INFO - - Protéines uniques: 3973
+2025-04-17 16:48:09,516 - INFO - - Interactions: 15376
+2025-04-17 16:48:09,517 - INFO - - Poids moyen: 0.3245
+2025-04-17 16:48:09,522 - INFO - - Densité du réseau: 0.001949
+2025-04-17 16:48:09,548 - INFO - 
+========================================
+Traitement de STRING_ (levure)
+========================================
+2025-04-17 16:48:11,236 - INFO - FS: 86142 interactions
+2025-04-17 16:48:11,319 - INFO - SL: 91378 interactions
+2025-04-17 16:48:11,403 - INFO - CO: 90224 interactions
+2025-04-17 16:48:11,459 - INFO - HCN: 48998 interactions
+2025-04-17 16:48:11,598 - INFO - Interactions communes: 41213
+2025-04-17 16:48:12,171 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_levure.txt
+2025-04-17 16:48:12,203 - INFO - 
+Résultats pour STRING__levure:
+2025-04-17 16:48:12,206 - INFO - - Protéines uniques: 4150
+2025-04-17 16:48:12,209 - INFO - - Interactions: 41213
+2025-04-17 16:48:12,211 - INFO - - Poids moyen: 0.3647
+2025-04-17 16:48:12,213 - INFO - - Densité du réseau: 0.004787
+2025-04-17 16:48:12,219 - INFO - 
+
+Récapitulatif final:
+2025-04-17 16:48:12,245 - INFO - 
+        network  unique_proteins  interactions  mean_weight  density
+BIOGRID__humain             9171         66373     0.293575 0.001578
+ STRING__humain            13016        166001     0.300437 0.001960
+BIOGRID__levure             5241        200897     0.252786 0.014630
+    DIP__levure             3973         15376     0.324516 0.001949
+ STRING__levure             4150         41213     0.364710 0.004787
+2025-04-17 16:48:12,251 - INFO - 
+Statistiques sauvegardées dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\network_statistics.txt
+2025-04-17 17:36:53,838 - INFO - Loaded 6726 UniProt to SGD mappings
+2025-04-17 17:36:53,873 - INFO - 
+Processing STRING_levure network
+2025-04-17 17:36:55,126 - INFO - Loaded PPI network with 96810 interactions
+2025-04-17 17:36:55,372 - INFO - Converting SGD IDs to UniProt IDs in GO annotations
+2025-04-17 17:36:55,408 - INFO - Loaded 48478 GO annotations
+2025-04-17 17:36:55,761 - INFO - Calculating functional similarity for 5707 unique proteins
+2025-04-17 17:36:55,859 - INFO - Computing cosine similarity...
+2025-04-17 17:37:37,866 - INFO - Saved weighted network to C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\FS_STRING_levure.txt with 86142 interactions
+2025-04-17 17:37:37,868 - INFO - 
+Processing BIOGRID_humain network
+2025-04-17 17:37:38,127 - INFO - Loaded PPI network with 88647 interactions
+2025-04-17 17:37:42,871 - INFO - Loaded 764609 GO annotations
+2025-04-17 17:37:44,222 - INFO - Calculating functional similarity for 11266 unique proteins
+2025-04-17 17:37:45,001 - INFO - Computing cosine similarity...
+2025-04-17 17:38:52,185 - INFO - Saved weighted network to C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\FS_BIOGRID_humain.txt with 80778 interactions
+2025-04-17 17:38:52,207 - INFO - 
+Processing STRING_humain network
+2025-04-17 17:38:53,773 - INFO - Loaded PPI network with 228171 interactions
+2025-04-17 17:39:00,179 - INFO - Loaded 764609 GO annotations
+2025-04-17 17:39:03,348 - INFO - Calculating functional similarity for 15943 unique proteins
+2025-04-17 17:39:04,770 - INFO - Computing cosine similarity...
+2025-04-17 17:41:08,356 - INFO - Saved weighted network to C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\FS_STRING_humain.txt with 205424 interactions
+2025-04-17 17:41:08,381 - INFO - 
+Processing BIOGRID_levure network
+2025-04-17 17:41:10,028 - INFO - Loaded PPI network with 300000 interactions
+2025-04-17 17:41:10,674 - INFO - Converting SGD IDs to UniProt IDs in GO annotations
+2025-04-17 17:41:10,945 - INFO - Loaded 48478 GO annotations
+2025-04-17 17:41:13,839 - INFO - Calculating functional similarity for 5805 unique proteins
+2025-04-17 17:41:14,032 - INFO - Computing cosine similarity...
+2025-04-17 17:43:12,797 - INFO - Saved weighted network to C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\FS_BIOGRID_levure.txt with 215304 interactions
+2025-04-17 17:43:12,813 - INFO - 
+Processing DIP_levure network
+2025-04-17 17:43:13,130 - INFO - Loaded PPI network with 22614 interactions
+2025-04-17 17:43:13,588 - INFO - Converting SGD IDs to UniProt IDs in GO annotations
+2025-04-17 17:43:13,637 - INFO - Loaded 48478 GO annotations
+2025-04-17 17:43:13,710 - INFO - Calculating functional similarity for 5144 unique proteins
+2025-04-17 17:43:13,796 - INFO - Computing cosine similarity...
+2025-04-17 17:43:23,821 - INFO - Saved weighted network to C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\FS_DIP_levure.txt with 16393 interactions
+2025-04-17 20:10:00,926 - INFO - 
+==================================================
+2025-04-17 20:10:00,934 - INFO - Traitement des réseaux pour levure
+2025-04-17 20:10:00,941 - INFO - ==================================================
+2025-04-17 20:10:02,685 - INFO - 717525 entrées de compartiment valides chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\yeast_compartment_mapped.txt
+2025-04-17 20:10:02,685 - INFO - 
+Traitement du réseau STRING...
+2025-04-17 20:10:02,835 - INFO - 96810 interactions chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\STRING_levure.txt
+2025-04-17 20:10:12,228 - WARNING - 285 protéines sans données de compartiment
+2025-04-17 20:10:12,596 - INFO - Réseau pondéré sauvegardé (91378 interactions)
+2025-04-17 20:10:12,596 - INFO - 
+Traitement du réseau BIOGRID...
+2025-04-17 20:10:12,959 - INFO - 300000 interactions chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\BIOGRID_levure.txt
+2025-04-17 20:10:31,991 - WARNING - 360 protéines sans données de compartiment
+2025-04-17 20:10:33,009 - INFO - Réseau pondéré sauvegardé (291326 interactions)
+2025-04-17 20:10:33,009 - INFO - 
+Traitement du réseau DIP...
+2025-04-17 20:10:33,044 - INFO - 22614 interactions chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\DIP_levure.txt
+2025-04-17 20:10:35,008 - WARNING - 280 protéines sans données de compartiment
+2025-04-17 20:10:35,104 - INFO - Réseau pondéré sauvegardé (21582 interactions)
+2025-04-17 20:10:35,120 - INFO - 
+==================================================
+2025-04-17 20:10:35,120 - INFO - Traitement des réseaux pour humain
+2025-04-17 20:10:35,120 - INFO - ==================================================
+2025-04-17 20:10:44,893 - INFO - 4472243 entrées de compartiment valides chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\human_compartment_mapped.txt
+2025-04-17 20:10:44,920 - INFO - 
+Traitement du réseau STRING...
+2025-04-17 20:10:45,247 - INFO - 228171 interactions chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\STRING_humain.txt
+2025-04-17 20:11:08,625 - WARNING - 6 protéines sans données de compartiment
+2025-04-17 20:11:09,609 - INFO - Réseau pondéré sauvegardé (227814 interactions)
+2025-04-17 20:11:09,609 - INFO - 
+Traitement du réseau BIOGRID...
+2025-04-17 20:11:09,938 - INFO - 88647 interactions chargées depuis C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\interactions\BIOGRID_humain.txt
+2025-04-17 20:11:20,475 - WARNING - 119 protéines sans données de compartiment
+2025-04-17 20:11:20,962 - INFO - Réseau pondéré sauvegardé (86981 interactions)
+2025-04-17 20:17:24,467 - INFO - 
+========================================
+Traitement de BIOGRID_ (humain)
+========================================
+2025-04-17 20:17:25,005 - INFO - FS: 80778 interactions
+2025-04-17 20:17:25,042 - INFO - SL: 86981 interactions
+2025-04-17 20:17:25,088 - INFO - CO: 72599 interactions
+2025-04-17 20:17:25,139 - INFO - HCN: 88647 interactions
+2025-04-17 20:17:25,188 - INFO - Interactions communes: 66373
+2025-04-17 20:17:25,687 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_humain.txt
+2025-04-17 20:17:25,708 - INFO - 
+Résultats pour BIOGRID__humain:
+2025-04-17 20:17:25,708 - INFO - - Protéines uniques: 9171
+2025-04-17 20:17:25,708 - INFO - - Interactions: 66373
+2025-04-17 20:17:25,708 - INFO - - Poids moyen: 0.2936
+2025-04-17 20:17:25,721 - INFO - - Densité du réseau: 0.001578
+2025-04-17 20:17:25,725 - INFO - 
+========================================
+Traitement de STRING_ (humain)
+========================================
+2025-04-17 20:17:27,119 - INFO - FS: 205424 interactions
+2025-04-17 20:17:27,219 - INFO - SL: 227814 interactions
+2025-04-17 20:17:27,336 - INFO - CO: 182177 interactions
+2025-04-17 20:17:27,436 - INFO - HCN: 228171 interactions
+2025-04-17 20:17:27,656 - INFO - Interactions communes: 166001
+2025-04-17 20:17:29,242 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_humain.txt
+2025-04-17 20:17:29,339 - INFO - 
+Résultats pour STRING__humain:
+2025-04-17 20:17:29,339 - INFO - - Protéines uniques: 13016
+2025-04-17 20:17:29,339 - INFO - - Interactions: 166001
+2025-04-17 20:17:29,339 - INFO - - Poids moyen: 0.3026
+2025-04-17 20:17:29,339 - INFO - - Densité du réseau: 0.001960
+2025-04-17 20:17:29,387 - INFO - 
+========================================
+Traitement de BIOGRID_ (levure)
+========================================
+2025-04-17 20:17:31,001 - INFO - FS: 215304 interactions
+2025-04-17 20:17:31,151 - INFO - SL: 291326 interactions
+2025-04-17 20:17:31,302 - INFO - CO: 286549 interactions
+2025-04-17 20:17:31,502 - INFO - HCN: 300000 interactions
+2025-04-17 20:17:31,700 - INFO - Interactions communes: 200897
+2025-04-17 20:17:33,261 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_BIOGRID_levure.txt
+2025-04-17 20:17:33,330 - INFO - 
+Résultats pour BIOGRID__levure:
+2025-04-17 20:17:33,330 - INFO - - Protéines uniques: 5241
+2025-04-17 20:17:33,330 - INFO - - Interactions: 200897
+2025-04-17 20:17:33,330 - INFO - - Poids moyen: 0.2528
+2025-04-17 20:17:33,330 - INFO - - Densité du réseau: 0.014630
+2025-04-17 20:17:33,377 - INFO - 
+========================================
+Traitement de DIP_ (levure)
+========================================
+2025-04-17 20:17:33,501 - INFO - FS: 16393 interactions
+2025-04-17 20:17:33,517 - INFO - SL: 21582 interactions
+2025-04-17 20:17:33,538 - INFO - CO: 20652 interactions
+2025-04-17 20:17:33,552 - INFO - HCN: 22614 interactions
+2025-04-17 20:17:33,568 - INFO - Interactions communes: 15376
+2025-04-17 20:17:33,665 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_DIP_levure.txt
+2025-04-17 20:17:33,685 - INFO - 
+Résultats pour DIP__levure:
+2025-04-17 20:17:33,685 - INFO - - Protéines uniques: 3973
+2025-04-17 20:17:33,685 - INFO - - Interactions: 15376
+2025-04-17 20:17:33,685 - INFO - - Poids moyen: 0.3245
+2025-04-17 20:17:33,685 - INFO - - Densité du réseau: 0.001949
+2025-04-17 20:17:33,700 - INFO - 
+========================================
+Traitement de STRING_ (levure)
+========================================
+2025-04-17 20:17:34,215 - INFO - FS: 86142 interactions
+2025-04-17 20:17:34,265 - INFO - SL: 91378 interactions
+2025-04-17 20:17:34,317 - INFO - CO: 90224 interactions
+2025-04-17 20:17:34,373 - INFO - HCN: 96810 interactions
+2025-04-17 20:17:34,433 - INFO - Interactions communes: 76901
+2025-04-17 20:17:34,929 - INFO - 
+Réseau final sauvegardé dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\weighted_networks\weighted_STRING_levure.txt
+2025-04-17 20:17:34,969 - INFO - 
+Résultats pour STRING__levure:
+2025-04-17 20:17:34,969 - INFO - - Protéines uniques: 4935
+2025-04-17 20:17:34,978 - INFO - - Interactions: 76901
+2025-04-17 20:17:34,981 - INFO - - Poids moyen: 0.3390
+2025-04-17 20:17:34,982 - INFO - - Densité du réseau: 0.006316
+2025-04-17 20:17:34,995 - INFO - 
+
+Récapitulatif final:
+2025-04-17 20:17:34,995 - INFO - 
+        network  unique_proteins  interactions  mean_weight  density
+BIOGRID__humain             9171         66373     0.293575 0.001578
+ STRING__humain            13016        166001     0.302619 0.001960
+BIOGRID__levure             5241        200897     0.252786 0.014630
+    DIP__levure             3973         15376     0.324516 0.001949
+ STRING__levure             4935         76901     0.338952 0.006316
+2025-04-17 20:17:34,995 - INFO - 
+Statistiques sauvegardées dans C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\autres\network_statistics.txt
