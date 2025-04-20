@@ -1,44 +1,69 @@
 import csv
 
-def process_complexes(input_file, output_file):
-    # Dictionnaire pour stocker les complexes (id -> set de protéines)
+def process_corum(file_path):
     complexes = {}
-    
-    # Lire le fichier d'entrée
-    with open(input_file, 'r', encoding='utf-8') as f:
+    all_proteins = set()
+    with open(file_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f, delimiter='\t')
-        
         for row in reader:
-            complex_id = row['complex_id']
+            complex_id = "CORUM_" + row['complex_id']
             proteins = row['subunits_uniprot_id']
-            
             if proteins:
-                # Séparer les protéines et supprimer les doublons
-                protein_list = [p.strip() for p in proteins.split(';') if p.strip()]
-                unique_proteins = list(set(protein_list))
-                
-                # Stocker dans le dictionnaire
-                complexes[complex_id] = unique_proteins
-    
-    # Écrire le fichier de sortie
-    with open(output_file, 'w', encoding='utf-8', newline='') as f:
+                protein_list = sorted(set(p.strip() for p in proteins.split(';') if p.strip()))
+                complexes[complex_id] = protein_list
+                all_proteins.update(protein_list)
+    print(f"[CORUM] Complexes: {len(complexes)} | Protéines uniques: {len(all_proteins)}")
+    return complexes, all_proteins
+
+def process_humap(file_path):
+    complexes = {}
+    all_proteins = set()
+    with open(file_path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            complex_id = "HuMAP_" + row['HuMAP2_ID']
+            proteins = row['Uniprot_ACCs']
+            if proteins:
+                protein_list = sorted(set(p.strip() for p in proteins.split(' ') if p.strip()))
+                complexes[complex_id] = protein_list
+                all_proteins.update(protein_list)
+    print(f"[Hu.MAP] Complexes: {len(complexes)} | Protéines uniques: {len(all_proteins)}")
+    return complexes, all_proteins
+
+def export_unique_complexes(complexes_dict, output_path):
+    seen = set()
+    unique_complexes = []
+
+    for complex_id, proteins in complexes_dict.items():
+        protein_tuple = tuple(sorted(proteins))
+        if protein_tuple not in seen:
+            seen.add(protein_tuple)
+            unique_complexes.append((complex_id, protein_tuple))
+
+    with open(output_path, 'w', encoding='utf-8', newline='') as f:
         writer = csv.writer(f, delimiter='\t')
         writer.writerow(['complex_id', 'proteins'])
-        
-        for complex_id, proteins in complexes.items():
-            # Joindre les protéines avec des points-virgules
-            protein_str = ';'.join(proteins)
-            writer.writerow([complex_id, protein_str])
+        for complex_id, protein_tuple in unique_complexes:
+            writer.writerow([complex_id, ';'.join(protein_tuple)])
+
+    all_proteins = set(p for _, proteins in unique_complexes for p in proteins)
+    print(f"\n[Union] Complexes non redondants : {len(unique_complexes)}")
+    print(f"[Union] Protéines uniques totales : {len(all_proteins)}")
+    print(f"Fichier sauvegardé : {output_path}")
 
 if __name__ == '__main__':
-    input_filename = r'C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Complexes\corum_humanComplexes.txt'  # Remplacez par votre fichier d'entrée
-    output_filename = r'C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\CORUM_complexes_humain.txt'  # Fichier de sortie
-    
-    process_complexes(input_filename, output_filename)
-    print(f"Le fichier de sortie a été généré : {output_filename}")
+    corum_file = r'C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Complexes\corum_humanComplexes.txt'
+    humap_file = r'C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Complexes\hu.MAP_complexes.txt'
+    output_file = r'C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data\complexes\merged_unique_complexes.txt'
+
+    corum_complexes, corum_proteins = process_corum(corum_file)
+    humap_complexes, humap_proteins = process_humap(humap_file)
+
+    all_complexes = {**corum_complexes, **humap_complexes}
+    export_unique_complexes(all_complexes, output_file)
+
 
 #############################################################################################################################
-
 
 import csv
 from pathlib import Path
@@ -168,7 +193,7 @@ if __name__ == '__main__':
     DATA_DIR = Path(r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\clean data")
     
     # Fichier de complexes source
-    CORUM_FILE = DATA_DIR / "complexes" / "CORUM_complexes_humain.txt"
+    CORUM_FILE = DATA_DIR / "complexes" / "merged_unique_complexes.txt"
     
     # Traitement BIOGRID
     process_ppi_network(

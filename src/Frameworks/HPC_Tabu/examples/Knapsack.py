@@ -1,7 +1,7 @@
 from typing import List
-from fastTabou.common import Solution, NeighborhoodGenerator, CompositeNeighborhood
-from fastTabou.sequential import TabouSearch
-from fastTabou.sequential.utils import frequency_aspiration
+from HPC_Tabu.common import Solution, NeighborhoodGenerator, CompositeNeighborhood
+from HPC_Tabu.sequential import TabouSearch
+from HPC_Tabu.sequential.utils import frequency_aspiration
 
 # 0. Données du problème (à adapter)
 items = [(60, 10), (100, 20), (120, 30)]  # Format: (valeur, poids)

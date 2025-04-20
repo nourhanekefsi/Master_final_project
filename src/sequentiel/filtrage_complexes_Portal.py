@@ -2,6 +2,7 @@ import os
 import zipfile
 import shutil
 from xml.etree import ElementTree as ET
+from collections import defaultdict
 
 # Chemins
 zip_path = r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Complexes\yeast.zip"
@@ -16,8 +17,11 @@ os.makedirs(extract_folder, exist_ok=True)
 with zipfile.ZipFile(zip_path, 'r') as zip_ref:
     zip_ref.extractall(extract_folder)
 
-# 2. Traitement spécifique pour votre format XML
+# 2. Traitement des fichiers XML
 complexes = []
+all_proteins = set()
+protein_to_complexes = defaultdict(list)
+
 yeast_folder = os.path.join(extract_folder, "yeast")
 
 for filename in os.listdir(yeast_folder):
@@ -27,55 +31,76 @@ for filename in os.listdir(yeast_folder):
         try:
             tree = ET.parse(filepath)
             root = tree.getroot()
-            
-            # Namespace spécifique à vos fichiers
             ns = {'mif': 'http://psi.hupo.org/mi/mif300'}
             
-            # Recherche des interactions complexes
             for interaction in root.findall(".//mif:abstractInteraction", ns):
                 proteins = set()
                 
-                # Recherche des participants
                 for participant in interaction.findall(".//mif:participant", ns):
-                    # Référence à l'interacteur
                     interactor_ref = participant.find(".//mif:interactorRef", ns)
                     if interactor_ref is not None:
-                        # Trouver l'interacteur correspondant
                         interactor = root.find(f".//mif:interactor[@id='{interactor_ref.text}']", ns)
                         if interactor is not None:
-                            # Vérifier si c'est une protéine
                             interactor_type = interactor.find(".//mif:interactorType/mif:names/mif:shortLabel", ns)
                             if interactor_type is not None and interactor_type.text == "protein":
-                                # Récupérer l'identifiant UniProt
                                 uniprot = interactor.find(".//mif:xref/mif:primaryRef[@db='uniprotkb']", ns)
                                 if uniprot is not None:
-                                    proteins.add(uniprot.get("id"))
+                                    protein_id = uniprot.get("id")
+                                    proteins.add(protein_id)
+                                    all_proteins.add(protein_id)
                 
                 if proteins:
-                    complexes.append(sorted(proteins))
+                    complex_id = f"complex_{len(complexes)+1}"
+                    complexes.append((complex_id, proteins))
+                    for protein in proteins:
+                        protein_to_complexes[protein].append(complex_id)
         
         except Exception as e:
             print(f"Erreur avec {filename}: {str(e)[:200]}")
 
 # 3. Écriture du fichier final
 with open(output_file, 'w', encoding='utf-8') as f_out:
-    # Format: ID [tab] Liste_de_protéines (séparées par des espaces)
-    for idx, proteins in enumerate(complexes, 1):
-        f_out.write(f"{idx}\t{' '.join(proteins)}\n")
+    for complex_id, proteins in complexes:
+        f_out.write(f"{complex_id}\t{' '.join(sorted(proteins))}\n")
 
-# 4. Rapport
+# 4. Calcul des statistiques
+num_complexes = len(complexes)
+num_unique_proteins = len(all_proteins)
+
+# Distribution des tailles de complexes
+size_distribution = defaultdict(int)
+for _, proteins in complexes:
+    size_distribution[len(proteins)] += 1
+
+# Protéines les plus fréquentes
+protein_frequency = {protein: len(complexes) for protein, complexes in protein_to_complexes.items()}
+top_proteins = sorted(protein_frequency.items(), key=lambda x: x[1], reverse=True)[:10]
+
+# 5. Affichage des résultats
+print("\n" + "="*50)
 print(f"Fichier généré: {output_file}")
-print(f"Nombre total de complexes trouvés: {len(complexes)}")
+print("="*50)
+print(f"\nSTATISTIQUES GLOBALES:")
+print(f"- Nombre total de complexes: {num_complexes}")
+print(f"- Nombre de protéines uniques: {num_unique_proteins}")
+print(f"- Nombre moyen de protéines par complexe: {sum(len(p) for _, p in complexes)/num_complexes:.2f}")
 
+print("\nDISTRIBUTION DES TAILLES DE COMPLEXES:")
+for size, count in sorted(size_distribution.items()):
+    print(f"- Complexes de taille {size}: {count} ({(count/num_complexes)*100:.1f}%)")
+
+print("\nTOP 10 DES PROTÉINES LES PLUS FRÉQUENTES:")
+for protein, freq in top_proteins:
+    print(f"- {protein}: présente dans {freq} complexes ({(freq/num_complexes)*100:.1f}%)")
+print("="*50)
 
 ################################################################################################################################
-
 
 from collections import defaultdict, deque
 from pathlib import Path
 
 def load_complexes(file_path):
-    """Charge les complexes depuis le fichier"""
+    """Charge les complexes depuis le fichier et retourne une liste de tuples (id_complexe, set de protéines)"""
     complexes = []
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
@@ -83,12 +108,11 @@ def load_complexes(file_path):
             if len(parts) >= 2:
                 complex_id = parts[0]
                 proteins = set(p.strip() for p in parts[1].split() if p.strip())
-                if len(proteins) >= 3:  # Ne garder que les complexes avec ≥3 protéines
-                    complexes.append((complex_id, proteins))
+                complexes.append((complex_id, proteins))
     return complexes
 
 def load_ppi_network(file_path):
-    """Charge le réseau PPI"""
+    """Charge le réseau PPI et retourne un set de protéines et le graphe PPI"""
     proteins = set()
     graph = defaultdict(set)
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -107,13 +131,16 @@ def load_ppi_network(file_path):
     return proteins, graph
 
 def is_single_connected_component(proteins, ppi_graph):
-    """Vérifie la connectivité du complexe"""
-    if len(proteins) < 2:
-        return True
+    """Vérifie si les protéines forment un seul composant connecté dans le réseau PPI"""
+    if not proteins:
+        return False
     
     visited = set()
-    queue = deque([next(iter(proteins))])
-    visited.add(queue[0])
+    queue = deque()
+    
+    start_protein = next(iter(proteins))
+    queue.append(start_protein)
+    visited.add(start_protein)
     
     while queue:
         current = queue.popleft()
@@ -124,23 +151,31 @@ def is_single_connected_component(proteins, ppi_graph):
     
     return visited == proteins
 
-def filter_and_save_complexes(complexes, ppi_proteins, ppi_graph, output_file):
-    """Filtre et sauvegarde les complexes valides"""
+def filter_complexes(complexes, ppi_proteins, ppi_graph, output_file):
+    """Filtre les complexes et sauvegarde ceux valides"""
     stats = {
-        'total': len(complexes),
+        'total': 0,
         'kept': 0,
         'missing_proteins': 0,
-        'disconnected': 0
+        'disconnected': 0,
+        'too_small': 0  # Ajout d'une nouvelle statistique pour les complexes trop petits
     }
     
     with open(output_file, 'w', encoding='utf-8') as f_out:
         for complex_id, proteins in complexes:
-            # Vérifier présence dans PPI
+            stats['total'] += 1
+            
+            # Étape 1: Filtrer les complexes avec moins de 3 protéines
+            if len(proteins) < 3:
+                stats['too_small'] += 1
+                continue
+            
+            # Vérifier que toutes les protéines sont dans le PPI
             if not all(p in ppi_proteins for p in proteins):
                 stats['missing_proteins'] += 1
                 continue
             
-            # Vérifier connectivité
+            # Vérifier la connectivité
             if not is_single_connected_component(proteins, ppi_graph):
                 stats['disconnected'] += 1
                 continue
@@ -168,9 +203,9 @@ def main():
         base_dir / "complexes" / "complexes_BIOGRID_levure.txt"
     ]
 
-    # Charger les complexes (déjà filtrés pour taille ≥3)
+    # Charger les complexes
     complexes = load_complexes(complexes_file)
-    print(f"Complexes chargés (taille ≥3): {len(complexes)}")
+    print(f"Nombre total de complexes chargés: {len(complexes)}")
 
     # Traiter chaque réseau PPI
     for ppi_file, out_file in zip(reseau_files, output_files):
@@ -179,23 +214,24 @@ def main():
         try:
             # Charger le réseau PPI
             ppi_proteins, ppi_graph = load_ppi_network(ppi_file)
-            print(f"- Protéines uniques: {len(ppi_proteins):,}")
-            print(f"- Interactions: {sum(len(v) for v in ppi_graph.values())//2:,}")
+            print(f"- Protéines uniques dans PPI: {len(ppi_proteins):,}")
+            print(f"- Interactions dans PPI: {sum(len(v) for v in ppi_graph.values())//2:,}")
 
-            # Filtrer et sauvegarder
-            stats = filter_and_save_complexes(complexes, ppi_proteins, ppi_graph, out_file)
+            # Filtrer les complexes
+            stats = filter_complexes(complexes, ppi_proteins, ppi_graph, out_file)
             
-            # Statistiques
+            # Afficher les statistiques
             print(f"- Complexes analysés: {stats['total']:,}")
             print(f"- Complexes conservés: {stats['kept']:,} ({stats['kept']/stats['total']*100:.1f}%)")
             print(f"  - Rejetés (protéines manquantes): {stats['missing_proteins']:,}")
             print(f"  - Rejetés (non connectés): {stats['disconnected']:,}")
+            print(f"  - Rejetés (taille < 3): {stats['too_small']:,}")
             print(f"- Fichier généré: {out_file}")
 
         except Exception as e:
-            print(f"Erreur: {str(e)}")
+            print(f"Erreur avec {ppi_file}: {str(e)}")
 
-    print("\nTerminé!")
+    print("\nTerminé avec succès !")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 """
-fastGA - Framework for Genetic Algorithms
+fastGA-hpc - Framework for Genetic Algorithms
 
 Expose les classes principales :
 - GeneticAlgorithm : Algorithme séquentiel de base
