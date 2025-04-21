@@ -3,6 +3,8 @@ import zipfile
 import shutil
 from xml.etree import ElementTree as ET
 from collections import defaultdict
+import panda as pd
+from unidecode import unidecode
 
 # Chemins
 zip_path = r"C:\Users\PC\Documents\M2 HPC\PFE\PFE_CODE\Data\raw data\Complexes\yeast.zip"
@@ -49,8 +51,8 @@ for filename in os.listdir(yeast_folder):
                                     proteins.add(protein_id)
                                     all_proteins.add(protein_id)
                 
-                if proteins:
-                    complex_id = f"complex_{len(complexes)+1}"
+                if len(proteins)>2:
+                    complex_id = f"{len(complexes)+1}"
                     complexes.append((complex_id, proteins))
                     for protein in proteins:
                         protein_to_complexes[protein].append(complex_id)
@@ -58,11 +60,22 @@ for filename in os.listdir(yeast_folder):
         except Exception as e:
             print(f"Erreur avec {filename}: {str(e)[:200]}")
 
-# 3. Écriture du fichier final
+# Flatten the list of complexes into a DataFrame
+results = pd.DataFrame([
+    {"id": complex_id, "Proteines": ';'.join(sorted(proteins))}
+    for complex_id, proteins in complexes
+])
+
+# Remove duplicates based on the 'Proteines' column
+results = results.drop_duplicates(subset=['Proteines'])
+
+# Save the results to a file
+results.to_csv(output_file, sep="\t", index=False, header=False)
+"""# 3. Écriture du fichier final
 with open(output_file, 'w', encoding='utf-8') as f_out:
     for complex_id, proteins in complexes:
         f_out.write(f"{complex_id}\t{' '.join(sorted(proteins))}\n")
-
+"""
 # 4. Calcul des statistiques
 num_complexes = len(complexes)
 num_unique_proteins = len(all_proteins)

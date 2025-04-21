@@ -1,4 +1,6 @@
 import csv
+import panda as pd
+from unidecode import unidecode
 
 def process_corum(file_path):
     complexes = {}
@@ -6,9 +8,9 @@ def process_corum(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f, delimiter='\t')
         for row in reader:
-            complex_id = "CORUM_" + row['complex_id']
+            complex_id = int(row['complex_id'])
             proteins = row['subunits_uniprot_id']
-            if proteins:
+            if isinstance(proteins, str) and len(proteins) > 2:
                 protein_list = sorted(set(p.strip() for p in proteins.split(';') if p.strip()))
                 complexes[complex_id] = protein_list
                 all_proteins.update(protein_list)
@@ -20,31 +22,33 @@ def process_humap(file_path):
     all_proteins = set()
     with open(file_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
+        complex_id = 0
         for row in reader:
-            complex_id = "HuMAP_" + row['HuMAP2_ID']
             proteins = row['Uniprot_ACCs']
-            if proteins:
+            if len(proteins)>2:
                 protein_list = sorted(set(p.strip() for p in proteins.split(' ') if p.strip()))
                 complexes[complex_id] = protein_list
                 all_proteins.update(protein_list)
+                complex_id += 1
     print(f"[Hu.MAP] Complexes: {len(complexes)} | Protéines uniques: {len(all_proteins)}")
     return complexes, all_proteins
 
 def export_unique_complexes(complexes_dict, output_path):
     seen = set()
     unique_complexes = []
-
-    for complex_id, proteins in complexes_dict.items():
+    complex_id = 0
+    for id, proteins in complexes_dict.items():
         protein_tuple = tuple(sorted(proteins))
         if protein_tuple not in seen:
             seen.add(protein_tuple)
             unique_complexes.append((complex_id, protein_tuple))
-
+            complex_id += 1
     with open(output_path, 'w', encoding='utf-8', newline='') as f:
         writer = csv.writer(f, delimiter='\t')
         writer.writerow(['complex_id', 'proteins'])
         for complex_id, protein_tuple in unique_complexes:
             writer.writerow([complex_id, ';'.join(protein_tuple)])
+        
 
     all_proteins = set(p for _, proteins in unique_complexes for p in proteins)
     print(f"\n[Union] Complexes non redondants : {len(unique_complexes)}")
