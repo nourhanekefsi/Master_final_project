@@ -7,7 +7,7 @@ class Population:
         self.individuals = individuals
 
     def best(self) -> 'Chromosome':
-        return max(self.individuals)
+        return max(self.individuals, key=lambda ind: ind._fitness)
 
     def average_fitness(self) -> float:
         return np.mean([ind.fitness for ind in self.individuals])

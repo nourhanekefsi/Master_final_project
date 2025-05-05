@@ -1,14 +1,14 @@
 [build-system]
-requires = ["setuptools>=63", "wheel"]
+requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "HPC_GA"
-version = "0.1.0"
+name = "hpc-ga"
+version = "0.2.8"
 authors = [
     {name = "KEFSI Nourhane", email = "nourhanekefsi@gmail.com"},
 ]
-description = "Framework for Genetic Algorithms with parallel support"
+description = "High Performance Computing Genetic Algorithm Framework"
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"  # Format SPDX simple
@@ -18,14 +18,8 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.21.0",
-    "matplotlib>=3.5.0",
-]
-
-[project.optional-dependencies]
-parallel = [
-    "mpi4py>=3.1.1",
-    "dask>=2023.0.0",
+    "networkx>=3.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/nourhanekefsi/Master_final_project/tree/main/src/Frameworks/fastGA"
+Homepage = "https://github.com/nourhanekefsi/Master_final_project/tree/main/src/Frameworks/HPC_GA"

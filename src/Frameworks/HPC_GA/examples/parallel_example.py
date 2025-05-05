@@ -1,23 +1,26 @@
-from HPC_GA import Chromosome, Population, ParallelGeneticAlgorithm
-from HPC_GA.core.operators import UniformCrossover, GaussianMutator
-from HPC_GA.utils import split_population  # Import split_population if it exists in fastGA
+from HPC_GA.common.population import Population
+from HPC_GA.common.chromosome import Chromosome
+from HPC_GA.core.genetic_algorithm import GeneticAlgorithm
+from HPC_GA.core.operators import Crossover, Mutator
 import numpy as np
 
+from HPC_GA.core.operators import GaussianMutator
+
+from HPC_GA.core.operators import UniformCrossover
+from HPC_GA.parallel.utils import split_population
 class SphereChromosome(Chromosome):
     def evaluate(self):
         return -np.sum(self.genes**2)
 
 # Création d'une population divisée en îlots
-pop = Population([SphereChromosome(np.random.rand(3)) for _ in range(100)])
-islands = split_population(pop, n_islands=4)
+pop = Population(SphereChromosome(np.random.rand(3)))
+island = pop
 
 # Configuration
-pga = ParallelGeneticAlgorithm(
-    populations=islands,
+pga = GeneticAlgorithm(
+    population=island,
     crossover=UniformCrossover(),
     mutator=GaussianMutator(rate=0.1),
-    migration_interval=10,
-    n_processes=4,
     max_generations=50
 )
 

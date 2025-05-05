@@ -1,3 +1,3 @@
-from .tabou_search import TabouSearch
+from .tabu_search import TabuSearch
 
-__all__ = ['TabouSearch']
+__all__ = ['TabuSearch']

@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
-Name: HPC_Tabu
-Version: 0.1.0
-Summary: Framework for Genetic Algorithms with parallel support
+Name: hpc-tabu
+Version: 0.2.10
+Summary: High Performance Computing Tabu Search Framework
 Author-email: KEFSI Nourhane <nourhanekefsi@gmail.com>
 License-Expression: MIT
 Project-URL: Homepage, https://github.com/nourhanekefsi/Master_final_project/tree/main/src/Frameworks/HPC_Tabu
@@ -11,10 +11,7 @@ Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 Requires-Dist: numpy>=1.21.0
-Requires-Dist: matplotlib>=3.5.0
-Provides-Extra: parallel
-Requires-Dist: mpi4py>=3.1.1; extra == "parallel"
-Requires-Dist: dask>=2023.0.0; extra == "parallel"
+Requires-Dist: networkx>=3.0
 Dynamic: license-file
 
 

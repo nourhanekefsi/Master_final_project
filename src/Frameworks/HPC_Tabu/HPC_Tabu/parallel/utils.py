@@ -1,8 +1,10 @@
+from typing import Callable, List
+from ..common.solution import Solution
+
+
 def default_stopping_condition(ts):
     """Condition d'arrêt par défaut : 50 itérations pour le parallèle"""
     return ts.iterations >= 50
-from typing import Callable, List
-from ..common.solution import Solution
 
 # --- Aspiration Criteria ---
 def basic_aspiration(candidate: Solution, best: Solution) -> bool:

@@ -37,3 +37,4 @@ class GeneticAlgorithm:
     def _update_history(self):
         self.history["best"].append(self.population.best().fitness)
         self.history["avg"].append(self.population.average_fitness())
+        

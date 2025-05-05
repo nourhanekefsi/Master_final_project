@@ -1,3 +1,3 @@
-from .parallel_tabou import ParallelTabouSearch
+from .parallel_tabu import ParallelTabuSearch
 
-__all__ = ['ParallelTabouSearch']
+__all__ = ['ParallelTabuSearch']

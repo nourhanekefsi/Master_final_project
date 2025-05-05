@@ -4,7 +4,7 @@ from ..common.chromosome import Chromosome
 
 class Crossover(ABC):
     @abstractmethod
-    def __call__(self, p1: 'Chromosome', p2: 'Chromosome') -> 'Chromosome':
+    def __call__(self, p1: 'Chromosome', p2: 'Chromosome', rate : float = 1) -> 'Chromosome':
         pass
 
 class UniformCrossover(Crossover):
