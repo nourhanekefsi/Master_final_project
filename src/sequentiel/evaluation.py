@@ -106,11 +106,14 @@ def FS_fitness(individual, graph):
 #=============================================================================================================================
                                  # Metriques d'evaluation
 #================================================================================================================================
+import numpy as np
+from math import sqrt
+
 def overlap_score(pred, real):
     return len(set(pred) & set(real)) / sqrt(len(pred) * len(real)) if pred and real else 0
 
 def jaccard_index(pred, real):
-    return len(pred & real) / len(pred | real) if pred | real else 0
+    return len(set(pred) & set(real)) / len(set(pred) | set(real)) if set(pred) | set(real) else 0
 
 def compute_metrics(predicted_complexes, real_complexes, threshold=0.2):
     m = len(predicted_complexes)
@@ -151,7 +154,7 @@ def compute_metrics(predicted_complexes, real_complexes, threshold=0.2):
     return {
         "PPV": ppv,
         "Recall (Sn)": sn,
-        "F-measure": f_measure,
+        "F-mesure": f_measure,
         "Accuracy": accuracy,
         "MMR": mmr,
         "Jaccard": jaccard,
