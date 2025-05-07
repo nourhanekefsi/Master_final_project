@@ -1,5 +1,7 @@
 import numpy as np
 from collections import defaultdict
+import numpy as np
+from math import sqrt
 
 # Fonctions pour évaluer un seul cluster
 def cohesiveness(cluster, graph):
@@ -77,7 +79,7 @@ def AWM(cluster, graph):
     abew = ABEW(cluster, graph)
     return aiew / (aiew + abew) if (aiew + abew) > 0 else 0
 
-def F_Fitness(cluster, graph):
+def FF(cluster, graph):
     """
     Fonction de fitness pour un seul cluster.
     :param cluster: Ensemble des nœuds du cluster
@@ -100,186 +102,62 @@ def FS_fitness(individual, graph):
     :param graph: Graphe PPI
     :return: Score FS_fitness
     """
-    return sum(F_Fitness(cluster, graph) for cluster in individual)
+    return sum(FF(cluster, graph) for cluster in individual)
+#=============================================================================================================================
+                                 # Metriques d'evaluation
+#================================================================================================================================
+import numpy as np
+from math import sqrt
 
-# Fonction d'optimisation locale pour un cluster
-def local_optimization(cluster, graph, max_iter=20):
-    """
-    Optimise un cluster localement en ajoutant/supprimant des nœuds.
-    :param cluster: Ensemble des nœuds du cluster
-    :param graph: Graphe PPI
-    :param max_iter: Nombre maximum d'itérations
-    :return: Cluster optimisé
-    """
-    optimized_cluster = set(cluster)
-    changed = True
-    iteration = 0
+def overlap_score(pred, real):
+    return len(set(pred) & set(real)) / sqrt(len(pred) * len(real)) if pred and real else 0
 
-    while changed and iteration < max_iter:
-        changed = False
-        current_ff = FF(optimized_cluster, graph)
+def jaccard_index(pred, real):
+    return len(set(pred) & set(real)) / len(set(pred) | set(real)) if set(pred) | set(real) else 0
 
-        # Étape 1: Suppression des nœuds internes
-        inner_nodes = {
-            node for node in optimized_cluster 
-            if any(neighbor not in optimized_cluster for neighbor in graph.get(node, {}))
-        }
-        if len(inner_nodes) > 0:
-            worst_node = min(inner_nodes, key=lambda x: FF(optimized_cluster - {x}, graph))
-            new_cluster = optimized_cluster - {worst_node}
-            if FF(new_cluster, graph) > current_ff:
-                optimized_cluster = new_cluster
-                changed = True
-                continue
+def compute_metrics(predicted_complexes, real_complexes, threshold=0.2):
+    m = len(predicted_complexes)
+    n = len(real_complexes)
 
-        # Étape 2: Ajout des nœuds frontaliers
-        boundary_nodes = set()
-        for node in optimized_cluster:
-            for neighbor in graph.get(node, {}):
-                if neighbor not in optimized_cluster:
-                    boundary_nodes.add(neighbor)
-        
-        if boundary_nodes:
-            best_node = max(boundary_nodes, key=lambda x: FF(optimized_cluster | {x}, graph))
-            new_cluster = optimized_cluster | {best_node}
-            if FF(new_cluster, graph) > current_ff:
-                optimized_cluster = new_cluster
-                changed = True
+    # Intersection max for PPV
+    ppv_numerator = sum(max(len(set(pred) & set(real)) for real in real_complexes) for pred in predicted_complexes)
+    ppv_denominator = sum(len(pred) for pred in predicted_complexes)
+    ppv = ppv_numerator / ppv_denominator if ppv_denominator > 0 else 0
 
-        iteration += 1
+    # Intersection max for Sn
+    sn_numerator = sum(max(len(set(pred) & set(real)) for pred in predicted_complexes) for real in real_complexes)
+    sn_denominator = sum(len(real) for real in real_complexes)
+    sn = sn_numerator / sn_denominator if sn_denominator > 0 else 0
 
-    return optimized_cluster
+    # F-measure
+    f_measure = (2 * ppv * sn) / (ppv + sn) if (ppv + sn) > 0 else 0
 
-# Métriques de performance
-def overlap_score(detected, known):
-    """
-    Calcule le score de chevauchement entre un cluster détecté et un cluster connu.
-    :param detected: Cluster détecté (ensemble de protéines)
-    :param known: Cluster connu (ensemble de protéines)
-    :return: Score de chevauchement
-    """
-    intersection = len(detected & known)
-    return (intersection ** 2) / (len(detected) * len(known)) if len(detected) * len(known) > 0 else 0
+    # Accuracy (as sqrt(Sn * PPV))
+    accuracy = sqrt(sn * ppv)
 
-def precision_recall_fmeasure(detected_complexes, known_complexes, threshold=0.2):
-    """
-    Calcule la précision, le rappel et le F-measure.
-    :param detected_complexes: Liste des clusters détectés
-    :param known_complexes: Liste des clusters connus
-    :param threshold: Seuil pour considérer un match
-    :return: (precision, recall, fmeasure)
-    """
-    TP = 0
-    for detected in detected_complexes:
-        for known in known_complexes:
-            if overlap_score(set(detected), set(known)) >= threshold:
-                TP += 1
-                break
-    
-    precision = TP / len(detected_complexes) if len(detected_complexes) > 0 else 0
-    recall = TP / len(known_complexes) if len(known_complexes) > 0 else 0
-    fmeasure = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
-    
-    return precision, recall, fmeasure
+    # MMR
+    mmr = np.mean([max(overlap_score(pred, real) for real in real_complexes) for pred in predicted_complexes]) if predicted_complexes else 0
 
-def coverage_rate(detected_complexes, known_complexes):
-    """
-    Calcule le taux de couverture.
-    :param detected_complexes: Liste des clusters détectés
-    :param known_complexes: Liste des clusters connus
-    :return: Taux de couverture
-    """
-    covered_proteins = set()
-    for known in known_complexes:
-        for detected in detected_complexes:
-            if len(set(detected) & set(known)) > 0:
-                covered_proteins.update(known)
-                break
-    
-    total_proteins = set().union(*known_complexes)
-    return len(covered_proteins) / len(total_proteins) if len(total_proteins) > 0 else 0
+    # Jaccard
+    jaccard = np.mean([max(jaccard_index(pred, real) for real in real_complexes) for pred in predicted_complexes]) if predicted_complexes else 0
 
-def accuracy(detected_complexes, known_complexes, threshold=0.2):
-    """
-    Calcule l'accuracy (moyenne géométrique de la précision et du rappel).
-    :param detected_complexes: Liste des clusters détectés
-    :param known_complexes: Liste des clusters connus
-    :return: Score d'accuracy
-    """
-    precision, recall, _ = precision_recall_fmeasure(detected_complexes, known_complexes, threshold)
-    return np.sqrt(precision * recall)
+    # Covered Rate
+    matched_reals = sum(
+        any(overlap_score(pred, real) >= threshold for pred in predicted_complexes)
+        for real in real_complexes
+    )
+    covered_rate = matched_reals / n if n > 0 else 0
 
-def MMR(detected_complexes, known_complexes):
-    """
-    Calcule le Maximum Matching Ratio.
-    :param detected_complexes: Liste des clusters détectés
-    :param known_complexes: Liste des clusters connus
-    :return: Score MMR
-    """
-    matched_pairs = set()
-    total = 0
-    
-    for known in known_complexes:
-        max_score = 0
-        best_match = None
-        for detected in detected_complexes:
-            score = overlap_score(set(detected), set(known))
-            if score > max_score:
-                max_score = score
-                best_match = tuple(detected)
-        if best_match and best_match not in matched_pairs:
-            matched_pairs.add(best_match)
-            total += max_score
-    
-    return total / len(known_complexes) if len(known_complexes) > 0 else 0
+    # Score total
+    score_total = f_measure + covered_rate + mmr + jaccard
 
-def jaccard_index(detected_complexes, known_complexes):
-    """
-    Calcule l'indice de Jaccard.
-    :param detected_complexes: Liste des clusters détectés
-    :param known_complexes: Liste des clusters connus
-    :return: Score de Jaccard
-    """
-    # Jaccard pour les clusters détectés
-    jaccard_C = 0
-    for detected in detected_complexes:
-        max_overlap = 0
-        for known in known_complexes:
-            intersection = len(set(detected) & set(known))
-            union = len(set(detected) | set(known))
-            overlap = intersection / union if union > 0 else 0
-            if overlap > max_overlap:
-                max_overlap = overlap
-        jaccard_C += max_overlap
-    jaccard_C /= len(detected_complexes) if len(detected_complexes) > 0 else 0
-    
-    # Jaccard pour les clusters connus
-    jaccard_G = 0
-    for known in known_complexes:
-        max_overlap = 0
-        for detected in detected_complexes:
-            intersection = len(set(detected) & set(known))
-            union = len(set(detected) | set(known))
-            overlap = intersection / union if union > 0 else 0
-            if overlap > max_overlap:
-                max_overlap = overlap
-        jaccard_G += max_overlap
-    jaccard_G /= len(known_complexes) if len(known_complexes) > 0 else 0
-    
-    # Jaccard combiné
-    return (2 * jaccard_C * jaccard_G) / (jaccard_C + jaccard_G) if (jaccard_C + jaccard_G) > 0 else 0
-
-def total_score(detected_complexes, known_complexes, threshold=0.2):
-    """
-    Calcule le score total combinant plusieurs métriques.
-    :param detected_complexes: Liste des clusters détectés
-    :param known_complexes: Liste des clusters connus
-    :return: Score total
-    """
-    _, _, fmeasure = precision_recall_fmeasure(detected_complexes, known_complexes, threshold)
-    cr = coverage_rate(detected_complexes, known_complexes)
-    acc = accuracy(detected_complexes, known_complexes, threshold)
-    mmr = MMR(detected_complexes, known_complexes)
-    jaccard = jaccard_index(detected_complexes, known_complexes)
-    
-    return fmeasure + cr + acc + mmr + jaccard
+    return {
+        "PPV": ppv,
+        "Recall (Sn)": sn,
+        "F-mesure": f_measure,
+        "Accuracy": accuracy,
+        "MMR": mmr,
+        "Jaccard": jaccard,
+        "Covered Rate": covered_rate,
+        "Score Total": score_total
+    }
