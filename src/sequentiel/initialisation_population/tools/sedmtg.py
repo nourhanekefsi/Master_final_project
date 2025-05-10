@@ -52,7 +52,7 @@ class ProteinNetwork:
 class SEDMTG:
     """Implementation of the SEDMTG algorithm for protein complex detection"""
     
-    def __init__(self, network: ProteinNetwork, iterations: int = 10):
+    def __init__(self, network: ProteinNetwork, iterations: int = 5):
         self.network = network
         self.iterations = iterations
     
@@ -152,7 +152,7 @@ class SEDMTG:
         avg_iterations = total_iterations / len(complexes) if complexes else 0
         return complexes, len(complexes), complex_scores, avg_iterations
     
-    def _refine_cluster(self, initial_cluster: List[str], max_iterations: int = 100) -> Tuple[List[str], int]:
+    def _refine_cluster(self, initial_cluster: List[str], max_iterations: int = 50) -> Tuple[List[str], int]:
         """Step 3: Extend and correct the cluster iteratively"""
         current_cluster = initial_cluster.copy()
         iterations = 0
