@@ -90,45 +90,94 @@ def load_go_annotations(file_path: str, proteins_in_network: Set[str]) -> Dict[s
     return dict(go_annotations)
 
 def load_detected_complexes(file_path: str) -> Dict[int, Set[str]]:
-    
     complexes = {}
     with open(file_path) as f:
         for line in f:
             line = line.strip()
-            if not line or line.startswith('#'):  # Ignore les lignes vides et commentaires
+            if not line or line.startswith('#'):  # Ignore empty lines and comments
                 continue
             
-            # Séparation de l'ID et des protéines
+            # Split the line into parts
             parts = line.split()
+            if len(parts) < 2:  # Skip lines without proteins
+                print(f"Warning: Ligne sans protéines ignorée - {line}")
+                continue
+            
             try:
                 complex_id = int(parts[0])
-                proteins = set(parts[1:])
+                # Split protein strings by semicolon and create a set
+                proteins = set()
+                for protein_str in parts[1:]:
+                    proteins.update(protein_str.split(';'))
                 complexes[complex_id] = proteins
-            except (ValueError, IndexError) as e:
-                print(f"Warning: Ligne mal formatée ignorée - {line}")
+            except ValueError as e:
+                print(f"Warning: ID de complexe mal formaté ignoré - {line}")
                 continue
                 
     return complexes
 
 def load_reference_complexes(file_path: str) -> Dict[int, Set[str]]:
+    """Load reference complexes from either:
+    1) Tab-separated format: complex_id\tprotein1;protein2;protein3
+    2) Space-separated format: complex_id\tprotein1 protein2 protein3
     
+    Handles both with and without header row.
+    
+    Args:
+        file_path: Path to the reference complexes file
+        
+    Returns:
+        Dictionary mapping complex IDs to sets of protein identifiers
+    """
     complexes = {}
     with open(file_path) as f:
-        header = next(f)  # Ignorer l'en-tête
+        # First try to read the first line to check for header
+        first_line = next(f).strip()
         
-        for line_num, line in enumerate(f, 2):  # Commencer à compter à partir de la ligne 2
+        # Check if first line looks like a header (contains 'complex_id' or 'protein')
+        has_header = ('complex_id' in first_line.lower()) or ('protein' in first_line.lower())
+        
+        # If it's a header, we've already consumed it with next(f)
+        # If not, we need to process this first line as data
+        if not has_header:
+            # Process the first line as data
+            try:
+                parts = first_line.split('\t', 1)
+                if len(parts) >= 2:
+                    complex_id = int(parts[0])
+                    protein_part = parts[1].strip()
+                    if ';' in protein_part:
+                        proteins = set(protein_part.split(';'))
+                    else:
+                        proteins = set(protein_part.split())
+                    complexes[complex_id] = proteins
+            except ValueError as e:
+                print(f"Erreur ligne 1: {str(e)} - {first_line}")
+        
+        # Now process the rest of the file
+        for line_num, line in enumerate(f, 2):  # Start counting from line 2
             line = line.strip()
             if not line:
                 continue
                 
             try:
-                complex_id, proteins = line.split('\t')
-                complex_id = int(complex_id)
-                protein_set = set(proteins.split(';'))
-                complexes[complex_id] = protein_set
+                parts = line.split('\t', 1)
+                if len(parts) < 2:
+                    print(f"Warning: Ligne {line_num} mal formatée - {line}")
+                    continue
+                    
+                complex_id = int(parts[0])
+                protein_part = parts[1].strip()
+                
+                if ';' in protein_part:
+                    proteins = set(protein_part.split(';'))
+                else:
+                    proteins = set(protein_part.split())
+                    
+                complexes[complex_id] = proteins
+                
             except ValueError as e:
-                print(f"Erreur ligne {line_num}: Format incorrect - {line}")
+                print(f"Erreur ligne {line_num}: {str(e)} - {line}")
                 continue
                 
     return complexes
-
