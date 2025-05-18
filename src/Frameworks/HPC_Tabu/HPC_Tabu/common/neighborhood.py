@@ -7,11 +7,7 @@ class NeighborhoodGenerator(ABC):
     def generate(self, solution: Solution) -> List[Solution]:
         pass
 
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """Identifiant du type de mouvement (ex: 'swap', 'insert')."""
-        pass
+    
 
 class CompositeNeighborhood(NeighborhoodGenerator):
     """Combine plusieurs générateurs de voisinage."""
@@ -24,6 +20,4 @@ class CompositeNeighborhood(NeighborhoodGenerator):
             neighbors.extend(neighborhood.generate(solution))
         return neighbors
 
-    @property
-    def name(self) -> str:
-        return "+".join([n.name for n in self._neighborhoods])
+    
