@@ -1,5 +1,7 @@
 import numpy as np
 from collections import defaultdict
+import numpy as np
+from math import sqrt
 
 # Fonctions pour évaluer un seul cluster
 def cohesiveness(cluster, graph):
@@ -100,13 +102,10 @@ def FS_fitness(individual, graph):
     :param graph: Graphe PPI
     :return: Score FS_fitness
     """
-    fitness_values = [FF(cluster, graph) for cluster in individual]
-    return np.mean(fitness_values) if fitness_values else 0
-
-
-#========================================================================================================================#
-                                        # Métriques de performance
-#=========================================================================================================================
+    return sum(FF(cluster, graph) for cluster in individual)
+#=============================================================================================================================
+                                 # Metriques d'evaluation
+#================================================================================================================================
 import numpy as np
 from math import sqrt
 
@@ -150,7 +149,7 @@ def compute_metrics(predicted_complexes, real_complexes, threshold=0.2):
     covered_rate = matched_reals / n if n > 0 else 0
 
     # Score total
-    score_total = f_measure + covered_rate + mmr + jaccard + covered_rate
+    score_total = f_measure + covered_rate + mmr + jaccard + accuracy
 
     return {
         "PPV": ppv,
