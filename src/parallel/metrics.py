@@ -1,0 +1,109 @@
+import multiprocessing
+import ray
+from typing import List, Dict
+import numpy as np
+from collections import defaultdict
+import numpy as np
+from math import sqrt
+
+# Fonctions pour évaluer un seul cluster
+def cohesiveness(cluster, graph):
+    """
+    Calcule la cohésion d'un cluster.
+    :param cluster: Ensemble des nœuds du cluster
+    :param graph: Graphe PPI sous forme de dictionnaire {nœud: {voisins: poids}}
+    :return: Score de cohésion
+    """
+    W_in = 0
+    W_out = 0
+    for node in cluster:
+        for neighbor, weight in graph.get(node, {}).items():
+            if neighbor in cluster:
+                W_in += weight
+            else:
+                W_out += weight
+    return W_in / (W_in + W_out) if (W_in + W_out) > 0 else 0
+
+def density(cluster, graph):
+    """
+    Calcule la densité d'un cluster.
+    :param cluster: Ensemble des nœuds du cluster
+    :param graph: Graphe PPI
+    :return: Score de densité
+    """
+    W_in = 0
+    for node in cluster:
+        for neighbor, weight in graph.get(node, {}).items():
+            if neighbor in cluster:
+                W_in += weight
+    n = len(cluster)
+    return (2 * W_in) / (n * (n - 1)) if n > 1 else 0
+
+def AIEW(cluster, graph):
+    """
+    Calcule le poids moyen des arêtes internes (Average Inner Edge Weight).
+    :param cluster: Ensemble des nœuds du cluster
+    :param graph: Graphe PPI
+    :return: Score AIEW
+    """
+    W_in = 0
+    E_C = 0
+    for node in cluster:
+        for neighbor, weight in graph.get(node, {}).items():
+            if neighbor in cluster:
+                W_in += weight
+                E_C += 1
+    return W_in / E_C if E_C > 0 else 0
+
+def ABEW(cluster, graph):
+    """
+    Calcule le poids moyen des arêtes frontalières (Average Border Edge Weight).
+    :param cluster: Ensemble des nœuds du cluster
+    :param graph: Graphe PPI
+    :return: Score ABEW
+    """
+    W_out = 0
+    BE_C = 0
+    for node in cluster:
+        for neighbor, weight in graph.get(node, {}).items():
+            if neighbor not in cluster:
+                W_out += weight
+                BE_C += 1
+    return W_out / BE_C if BE_C > 0 else 0
+
+def AWM(cluster, graph):
+    """
+    Calcule la modularité pondérée moyenne (Average Weighted Modularity).
+    :param cluster: Ensemble des nœuds du cluster
+    :param graph: Graphe PPI
+    :return: Score AWM
+    """
+    aiew = AIEW(cluster, graph)
+    abew = ABEW(cluster, graph)
+    return aiew / (aiew + abew) if (aiew + abew) > 0 else 0
+
+def FF(cluster, graph):
+    """
+    Fonction de fitness pour un seul cluster.
+    :param cluster: Ensemble des nœuds du cluster
+    :param graph: Graphe PPI
+    :return: Score FF combiné
+    """
+    return (
+        cohesiveness(cluster, graph) +
+        density(cluster, graph) +
+        AIEW(cluster, graph) -
+        ABEW(cluster, graph) +
+        AWM(cluster, graph)
+    )
+
+# Fonction pour évaluer un individu (ensemble de clusters)
+def FS_fitness(individual, graph):
+    """
+    Calcule le fitness total d'un individu (ensemble de clusters).
+    :param individual: Liste de clusters
+    :param graph: Graphe PPI
+    :return: Score FS_fitness
+    """
+    fitness_values = [FF(cluster, graph) for cluster in individual]
+    return np.sum(fitness_values) if fitness_values else 0
