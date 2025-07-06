@@ -1,0 +1,13 @@
+hpc_tabu
+hpc_ga
+numpy
+pandas
+scikit-learn
+tqdm
+scipy
+multiprocessing
+ray
+networkx
+matplotlib
+py4cytoscape
+webbrowser
