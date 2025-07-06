@@ -80,9 +80,9 @@ F(C) = Cohesion + Density + Isolation - Boundary + Modularity
 | OptClust-H   | 0.4300    | 0.5000   | 0.2200  | 0.3300| 0.9900| 2.4700       |
 | OptClust-Hp  | 0.4440    | 0.5138   | 0.2351  | 0.3557| 0.9931| 2.5417       |
 
-### 🧪 Table – STRING (Yeast) Network Results
+### Metrics – STRING (Yeast) 
 
-| Méthode      | F-mesure | Acc    | Jaccard | CR     | MMR    | Score Total |
+| Méthode      | F-measure | Accuracy   | Jaccard | CR     | MMR    | Total score |
 |--------------|----------|--------|---------|--------|--------|--------------|
 | MCL          | 0.3398   | 0.4340 | 0.1655  | 0.9205 | 0.2168 | 2.0767       |
 | MCODE        | 0.3640   | 0.4381 | 0.1808  | 0.9702 | 0.2483 | 2.2014       |
