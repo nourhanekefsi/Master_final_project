@@ -1,5 +1,13 @@
 # Hybrid Optimization Method for Protein Complex Extraction from PPI Networks Using HPC Platforms
 
+## 📚 Table of Contents
+- [Overview](#-overview)
+- [Objectives](#-objectives)
+- [Methodology](#-methodology)
+- [Technologies Used](#-technologies-used)
+- [Results](#-results)
+- [Repository Structure](#-repository-structure)
+
 ## 📌 Overview
 This project detects protein complexes from large-scale protein-protein interaction (PPI) networks using a hybrid optimization approach combining:
 - PPI network weighting with biological data
