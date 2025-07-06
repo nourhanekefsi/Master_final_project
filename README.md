@@ -51,6 +51,7 @@ F(C) = Cohesion + Density + Isolation - Boundary + Modularity
 - **HPC Frameworks**:
 - `hpc-ga`: Supports islands, cellular, master-slave models
 - `hpc-tabu`: Implements Crainic et al. taxonomy
+- ray, multiprocessing
 - **Infrastructure**: Grid5000, Cytoscape for visualization
 
 ## 📊 Results
