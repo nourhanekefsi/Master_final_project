@@ -35,8 +35,8 @@ F(C) = Cohesion + Density + Isolation - Boundary + Modularity
 ### Parallel Implementation
 - **Island model** with Ray/ThreadPool
 - Each island contains:
-- Tabu workers (complex optimization)
-- Master-slave structure for metric computation
+   - Tabu workers (complex optimization)
+   - Master-slave structure for metric computation
 
 ## 🛠️ Technologies
 - **Python** with NumPy, Pandas, Matplotlib
@@ -82,5 +82,5 @@ F(C) = Cohesion + Density + Isolation - Boundary + Modularity
      /parallel
 
       /sequential
-      
+
 requirements.txt
