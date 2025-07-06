@@ -55,7 +55,7 @@ F(C) = Cohesion + Density + Isolation - Boundary + Modularity
 | COACH        | 0.5022    | 0.5362   | 2.6706|
 
 ### Execution Time
-![Parallel vs Sequential Time Comparison](path/to/image.png)
+![Parallel vs Sequential Time Comparison]([path/to/image.png](https://github.com/nourhanekefsi/Master_final_project/blob/main/execution_time.png))
 
 ## 📂 Repository Structure
 /data
