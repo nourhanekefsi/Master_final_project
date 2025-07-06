@@ -23,10 +23,6 @@ This project detects protein complexes from large-scale protein-protein interact
 - Validation using real PPI datasets and gold-standard complexes
 
 ## 🧪 Methodology
-### Hybrid Approach
-- **Genetic Algorithm** for exploration
-- **Tabu Search** for local optimization
-
 ### Data Processing
 1. **Data Sources**:
    - PPI databases: BioGRID (yeast/human), STRING (yeast/human), DIP (yeast)
@@ -40,6 +36,10 @@ This project detects protein complexes from large-scale protein-protein interact
 3. **Fitness Function**:
 F(C) = Cohesion + Density + Isolation - Boundary + Modularity
 
+### Hybrid Approach
+- **Genetic Algorithm** for exploration
+- **Tabu Search** for local optimization
+  
 ### Parallel Implementation
 - **Island model** with Ray/ThreadPool
 - Each island contains:
