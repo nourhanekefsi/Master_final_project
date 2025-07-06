@@ -113,13 +113,13 @@ F(C) = Cohesion + Density + Isolation - Boundary + Modularity
 ## 📂 Repository Structure
 /data
 
-   /clean
+      /clean
 
-        /complexes
+            /complexes
 
-        /interactions
+            /interactions
 
-        /weighted-networks
+            /weighted-networks
 
 /notebooks
 
